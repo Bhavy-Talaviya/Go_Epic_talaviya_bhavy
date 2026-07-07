@@ -3,14 +3,16 @@
   --bg-primary: #f7f8fa;
   --bg-secondary: #ffffff;
   --bg-tertiary: #f2f3f5;
-  --bg-editor: #1e1e1e; /* Split code editor dark pane */
+  --bg-editor: #1e1e1e;
+  /* Split code editor dark pane */
   --bg-hover: #f0f0f0;
 
   --text-primary: #262626;
   --text-secondary: #5a5a5a;
   --text-tertiary: #8a8a8a;
 
-  --primary: #ffa116; /* LeetCode Orange */
+  --primary: #ffa116;
+  /* LeetCode Orange */
   --primary-hover: #e68e0d;
   --primary-light: rgba(255, 161, 22, 0.08);
 
@@ -98,7 +100,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
   font-weight: 600;
   color: var(--text-primary);
@@ -115,7 +122,8 @@ h1, h2, h3, h4, h5, h6 {
 .main-content {
   flex: 1;
   display: flex;
-  flex-direction: row; /* Horizontal layout containing sidebar and main body */
+  flex-direction: row;
+  /* Horizontal layout containing sidebar and main body */
   min-height: calc(100vh - var(--navbar-height));
 }
 
@@ -131,6 +139,7 @@ h1, h2, h3, h4, h5, h6 {
   .content-body {
     padding: 1rem;
   }
+
   .main-content {
     flex-direction: column;
   }
@@ -227,8 +236,10 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%;
     border-right: none;
     border-bottom: 1px solid var(--border-color);
-    display: none; /* Collapsible or toggleable on mobile */
+    display: none;
+    /* Collapsible or toggleable on mobile */
   }
+
   .sidebar.open {
     display: flex;
   }
@@ -307,13 +318,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (max-width: 1024px) {
-  .grid-cols-3, .grid-cols-4 {
+
+  .grid-cols-3,
+  .grid-cols-4 {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 640px) {
-  .grid-cols-2, .grid-cols-3, .grid-cols-4 {
+
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 {
     grid-template-columns: 1fr;
   }
 }
@@ -572,7 +588,13 @@ h1, h2, h3, h4, h5, h6 {
 /* Split Code Workspace layout (LeetCode detail page replica) */
 .workspace-container {
   display: flex;
+  position: fixed;
+  top: var(--navbar-height);
+  left: 0;
+  right: 0;
+  bottom: 0;
   height: calc(100vh - var(--navbar-height));
+  z-index: 90;
   background-color: var(--bg-primary);
   overflow: hidden;
   padding: 0.5rem;
@@ -639,7 +661,8 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: #1e1e1e; /* Real dark IDE look */
+  background-color: #1e1e1e;
+  /* Real dark IDE look */
   color: #abb2bf;
 }
 
@@ -725,10 +748,21 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--bg-tertiary);
 }
 
-.contrib-day.level-1 { background-color: #c6e48b; }
-.contrib-day.level-2 { background-color: #7bc96f; }
-.contrib-day.level-3 { background-color: #239a3b; }
-.contrib-day.level-4 { background-color: #196127; }
+.contrib-day.level-1 {
+  background-color: #c6e48b;
+}
+
+.contrib-day.level-2 {
+  background-color: #7bc96f;
+}
+
+.contrib-day.level-3 {
+  background-color: #239a3b;
+}
+
+.contrib-day.level-4 {
+  background-color: #196127;
+}
 
 /* Dashboard circular stats indicator */
 .stats-circle-container {
@@ -807,8 +841,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Theme Switcher Button */
@@ -864,4 +905,53 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
+}
+
+/* Hide non-essential columns on mobile */
+@media (max-width: 768px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
+
+/* Make Split Workspace responsive on tablets/mobile */
+@media (max-width: 900px) {
+  .workspace-container {
+    position: absolute !important;
+    flex-direction: column !important;
+    height: auto !important;
+    bottom: auto !important;
+    overflow-y: visible !important;
+    padding: 0.5rem;
+    gap: 0.75rem !important;
+    z-index: 90;
+  }
+
+  .workspace-pane {
+    height: 60vh !important;
+    min-height: 400px;
+    flex: none !important;
+    overflow: hidden;
+  }
+}
+
+/* Dashboard Responsive Layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.25rem;
+}
+
+.dashboard-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
 }

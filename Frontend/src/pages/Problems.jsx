@@ -250,7 +250,7 @@ const Problems = () => {
     setActiveTab('description');
     setRunLogs('');
     setShowLogs(false);
-    
+
     // Set default editor code boilerplate
     const titleClean = prob.instruction.substring(0, 40).replace(/[^a-zA-Z0-9]/g, ' ');
     const boilerplate = `/**
@@ -269,7 +269,7 @@ function solveChallenge() {
 // Invoke the entrypoint
 solveChallenge();`;
     setEditorCode(boilerplate);
-    
+
     setRelatedSolutions([]);
     setLoadingSolutions(true);
     try {
@@ -367,19 +367,19 @@ solveChallenge();`;
   if (detailProblem) {
     return (
       <div className="workspace-container">
-        
+
         {/* Left Pane - Problem Details / Solutions tab */}
         <div className="workspace-pane" style={{ flex: 1.1 }}>
           <div className="workspace-pane-header">
             <div className="tab-group">
-              <button 
+              <button
                 onClick={() => setActiveTab('description')}
                 className={`tab-item ${activeTab === 'description' ? 'active' : ''}`}
               >
                 <FileText size={13} style={{ marginRight: '0.25rem' }} />
                 <span>Description</span>
               </button>
-              <button 
+              <button
                 onClick={() => setActiveTab('solutions')}
                 className={`tab-item ${activeTab === 'solutions' ? 'active' : ''}`}
               >
@@ -387,8 +387,8 @@ solveChallenge();`;
                 <span>Solutions ({relatedSolutions.length})</span>
               </button>
             </div>
-            
-            <button 
+
+            <button
               className="btn btn-secondary btn-sm"
               style={{ border: 'none', background: 'transparent', display: 'flex', alignItems: 'center', padding: '0.25rem' }}
               onClick={() => setDetailProblem(null)}
@@ -407,18 +407,19 @@ solveChallenge();`;
                     <span>#{detailProblem.problem_number || '-'}</span>
                     <span>{detailProblem.instruction.split('\n')[0].substring(0, 50)}</span>
                   </h2>
-                  
+
                   <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.5rem', alignItems: 'center' }}>
-                    <span className={`badge ${
-                      detailProblem.difficulty === 'easy' || detailProblem.difficulty === 'beginner'
-                        ? 'badge-success'
-                        : detailProblem.difficulty === 'medium' || detailProblem.difficulty === 'intermediate'
-                          ? 'badge-warning'
-                          : 'badge-danger'
-                    }`}>
+                    <span className={`badge ${detailProblem.difficulty === 'easy' || detailProblem.difficulty === 'beginner'
+                      ? 'badge-success'
+                      : detailProblem.difficulty === 'medium' || detailProblem.difficulty === 'intermediate'
+                        ? 'badge-warning'
+                        : 'badge-danger'
+                      }`}>
                       {detailProblem.difficulty}
                     </span>
-                    <span className="badge badge-info">{detailProblem.topic}</span>
+                    <span className="badge badge-info">
+                      {detailProblem.topic ? detailProblem.topic.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : ''}
+                    </span>
                     <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
                       Views: {detailProblem.views || 0}
                     </span>
@@ -501,11 +502,11 @@ solveChallenge();`;
         {/* Right Pane - The Code Editor Mockup */}
         <div className="workspace-pane" style={{ flex: 1 }}>
           <div className="editor-container">
-            
+
             {/* Editor Top Bar */}
             <div className="editor-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <select 
+                <select
                   value={editorLanguage}
                   onChange={(e) => setEditorLanguage(e.target.value)}
                   style={{
@@ -567,8 +568,8 @@ solveChallenge();`;
               <div style={{ height: '140px', borderTop: '1px solid #1e1e1e', backgroundColor: '#151515', display: 'flex', flexDirection: 'column' }}>
                 <div style={{ height: '28px', backgroundColor: '#202020', display: 'flex', alignItems: 'center', padding: '0 0.75rem', justifyContent: 'space-between' }}>
                   <span style={{ fontSize: '0.7rem', color: '#abb2bf', fontWeight: 600 }}>Console logs</span>
-                  <button 
-                    onClick={() => setShowLogs(false)} 
+                  <button
+                    onClick={() => setShowLogs(false)}
                     style={{ background: 'none', border: 'none', color: '#5c6370', cursor: 'pointer', display: 'flex', alignItems: 'center' }}
                   >
                     <X size={12} />
@@ -582,24 +583,24 @@ solveChallenge();`;
 
             {/* Editor Footer Actions */}
             <div className="editor-footer">
-              <button 
+              <button
                 className="btn btn-secondary btn-sm"
                 style={{ backgroundColor: '#3e3e3e', border: 'none', color: '#eff2f6' }}
                 onClick={() => setShowLogs(!showLogs)}
               >
                 Console
               </button>
-              
+
               <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <button 
-                  className="btn btn-secondary btn-sm" 
+                <button
+                  className="btn btn-secondary btn-sm"
                   style={{ backgroundColor: '#3e3e3e', border: 'none', color: '#eff2f6', display: 'flex', alignItems: 'center', gap: '0.25rem' }}
                   onClick={handleRunCode}
                 >
                   <Play size={10} style={{ fill: 'currentColor' }} />
                   <span>Run</span>
                 </button>
-                <button 
+                <button
                   className="btn btn-primary btn-sm"
                   style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}
                   onClick={handleOpenSubmitSol}
@@ -725,7 +726,9 @@ solveChallenge();`;
             >
               <option value="">Topic</option>
               {topicsList.map(topic => (
-                <option key={topic._id || topic.name} value={topic.name}>{topic.name}</option>
+                <option key={topic._id || topic.name} value={topic.name}>
+                  {topic.name ? topic.name.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : ''}
+                </option>
               ))}
             </select>
           </div>
@@ -773,40 +776,39 @@ solveChallenge();`;
                   <th>Description / Instruction</th>
                   <th style={{ width: '130px' }}>Topic</th>
                   <th style={{ width: '100px' }}>Difficulty</th>
-                  <th style={{ width: '130px' }}>Source</th>
-                  <th style={{ width: '80px' }}>Views</th>
+                  <th style={{ width: '130px' }} className="hide-on-mobile">Source</th>
+                  <th style={{ width: '80px' }} className="hide-on-mobile">Views</th>
                   <th style={{ textAlign: 'right', width: '140px' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {problems.map((prob) => (
-                  <tr 
-                    key={prob._id} 
+                  <tr
+                    key={prob._id}
                     onClick={() => handleViewDetails(prob)}
                     style={{ cursor: 'pointer' }}
                   >
                     <td style={{ fontWeight: 600 }}>{prob.problem_number || '-'}</td>
-                    <td style={{ maxWidth: '380px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>
+                    <td style={{ maxWidth: '240px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }} title={prob.instruction}>
                       {prob.instruction}
                     </td>
-                    <td>
-                      <span className="badge badge-info" style={{ fontSize: '0.7rem' }}>{prob.topic}</span>
+                    <td style={{ maxWidth: '120px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontSize: '0.775rem', color: 'var(--text-secondary)' }} title={prob.topic ? prob.topic.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : ''}>
+                      {prob.topic ? prob.topic.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : ''}
                     </td>
                     <td>
-                      <span className={`badge ${
-                        prob.difficulty === 'easy' || prob.difficulty === 'beginner'
-                          ? 'badge-success'
-                          : prob.difficulty === 'medium' || prob.difficulty === 'intermediate'
-                            ? 'badge-warning'
-                            : 'badge-danger'
-                      }`} style={{ fontSize: '0.675rem' }}>
+                      <span className={`badge ${prob.difficulty === 'easy' || prob.difficulty === 'beginner'
+                        ? 'badge-success'
+                        : prob.difficulty === 'medium' || prob.difficulty === 'intermediate'
+                          ? 'badge-warning'
+                          : 'badge-danger'
+                        }`} style={{ fontSize: '0.675rem' }}>
                         {prob.difficulty || 'medium'}
                       </span>
                     </td>
-                    <td style={{ color: 'var(--text-secondary)', fontSize: '0.75rem' }}>
+                    <td className="hide-on-mobile" style={{ maxWidth: '120px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: 'var(--text-secondary)', fontSize: '0.75rem' }} title={prob.dataset_source || 'custom'}>
                       {prob.dataset_source || 'custom'}
                     </td>
-                    <td style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{prob.views || 0}</td>
+                    <td className="hide-on-mobile" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{prob.views || 0}</td>
                     <td>
                       <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.375rem' }} onClick={e => e.stopPropagation()}>
                         <button
