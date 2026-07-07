@@ -60,10 +60,10 @@ const seedDB = async () => {
 
       const problemsToInsert = problemsData.map((item, index) => ({
         instruction: item.instruction,
-        topic: item.topic,
-        difficulty: item.difficulty,
+        topic: item.topic || "General",
+        difficulty: item.difficulty || "medium",
         output: item.output || "",
-        dataset_source: item.source || item.dataset_source || "leetcode-top-100",
+        dataset_source: item.source || item.dataset_source || "go-epic",
         problem_number: index + 1,
         url: item.url || `https://leetcode.com/problems/mock-${index + 1}`,
         views: Math.floor(Math.random() * 100) + 1,
@@ -72,7 +72,7 @@ const seedDB = async () => {
       const inserted = await Problem.insertMany(problemsToInsert);
       console.log(`Seeded ${inserted.length} problems into 'dataset' collection.`);
 
-      // Seed Topics (derived from problems)
+      // Seed Topics (derived dynamically from problems)
       console.log("Seeding topics...");
       const uniqueTopics = [...new Set(problemsToInsert.map((p) => p.topic))];
       const topicsToInsert = uniqueTopics.map((topicName) => ({
@@ -84,31 +84,33 @@ const seedDB = async () => {
       await Topic.insertMany(topicsToInsert);
       console.log(`Seeded ${topicsToInsert.length} topics.`);
 
-      // Seed Datasets (derived from problems)
+      // Seed Datasets (derived dynamically from problems with difficulty normalization)
       console.log("Seeding datasets...");
-      const datasetsToInsert = [
-        {
-          source: "leetcode-top-100",
-          topic: "Arrays",
-          difficulty: "easy",
-          totalProblems: problemsToInsert.filter((p) => p.topic === "Arrays").length,
-          description: "leetcode-top-100 dataset for Arrays (easy)",
-        },
-        {
-          source: "leetcode-top-100",
-          topic: "Strings",
-          difficulty: "medium",
-          totalProblems: problemsToInsert.filter((p) => p.topic === "Strings").length,
-          description: "leetcode-top-100 dataset for Strings (medium)",
-        },
-        {
-          source: "leetcode-top-100",
-          topic: "Dynamic Programming",
-          difficulty: "advanced",
-          totalProblems: problemsToInsert.filter((p) => p.topic === "Dynamic Programming").length,
-          description: "leetcode-top-100 dataset for Dynamic Programming (advanced)",
-        },
-      ];
+      const normalizeDifficulty = (diff) => {
+        const d = (diff || "").toLowerCase();
+        if (d === "easy" || d === "beginner") return "easy";
+        if (d === "medium" || d === "intermediate") return "medium";
+        if (d === "advanced" || d === "hard" || d === "difficult") return "advanced";
+        return "medium";
+      };
+
+      const datasetGroups = {};
+      problemsToInsert.forEach((p) => {
+        const normalizedDiff = normalizeDifficulty(p.difficulty);
+        const key = `${p.dataset_source}::${p.topic}::${normalizedDiff}`;
+        if (!datasetGroups[key]) {
+          datasetGroups[key] = {
+            source: p.dataset_source,
+            topic: p.topic,
+            difficulty: normalizedDiff,
+            totalProblems: 0,
+            description: `${p.dataset_source} dataset for ${p.topic} (${normalizedDiff})`,
+          };
+        }
+        datasetGroups[key].totalProblems++;
+      });
+
+      const datasetsToInsert = Object.values(datasetGroups);
       await Dataset.insertMany(datasetsToInsert);
       console.log(`Seeded ${datasetsToInsert.length} datasets.`);
     } else {
